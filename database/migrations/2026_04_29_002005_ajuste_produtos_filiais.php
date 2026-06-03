@@ -30,7 +30,7 @@ class AjusteProdutosFiliais extends Migration
                 ->constrained('produtos')
                 ->onDelete('cascade');
 
-            $table->decimal('preco_venda', 8, 2);
+            $table->decimal('preco_venda', 8, 2); // colunas do tipo double vem como decimal no Laravel
             $table->integer('estoque_minimo');
             $table->integer('estoque_atual');
             $table->integer('estoque_maximo');
@@ -38,23 +38,35 @@ class AjusteProdutosFiliais extends Migration
             $table->timestamps();
         });
 
-        // Remover colunas da tabela produtos se existirem antes de criar a tabela produtos_filiais para evitar conflitos de dados e garantir que as informações de preço e estoque sejam gerenciadas exclusivamente na nova tabela produtos_filiais, permitindo uma estrutura de dados mais organizada e eficiente para lidar com múltiplas filiais e seus respectivos produtos.
+        // Remover colunas da tabela produtos que agora estão na tabela produtos_filiais
         Schema::table('produtos', function (Blueprint $table) {
 
             if (Schema::hasColumn('produtos', 'preco_venda')) {
                 $table->dropColumn('preco_venda');
+            } else {
+                // Se a coluna não existir, podemos lançar uma exceção ou apenas ignorar
+                // throw new Exception("Coluna 'preco_venda' não encontrada na tabela 'produtos'.");
             }
 
             if (Schema::hasColumn('produtos', 'estoque_minimo')) {
                 $table->dropColumn('estoque_minimo');
+            } else {
+                // Se a coluna não existir, podemos lançar uma exceção ou apenas ignorar
+                // throw new Exception("Coluna 'estoque_minimo' não encontrada na tabela 'produtos'.");
             }
 
             if (Schema::hasColumn('produtos', 'estoque_atual')) {
                 $table->dropColumn('estoque_atual');
+            } else {
+                // Se a coluna não existir, podemos lançar uma exceção ou apenas ignorar
+                // throw new Exception("Coluna 'estoque_atual' não encontrada na tabela 'produtos'.");
             }
 
             if (Schema::hasColumn('produtos', 'estoque_maximo')) {
                 $table->dropColumn('estoque_maximo');
+            } else {
+                // Se a coluna não existir, podemos lançar uma exceção ou apenas ignorar
+                // throw new Exception("Coluna 'estoque_maximo' não encontrada na tabela 'produtos'.");
             }
 
         });
@@ -65,7 +77,7 @@ class AjusteProdutosFiliais extends Migration
      */
     public function down()
     {
-        // Recriar colunas na tabela produtos
+        // Adicionar novamente as colunas na tabela produtos 
         Schema::table('produtos', function (Blueprint $table) {
             $table->decimal('preco_venda', 8, 2)->nullable();
             $table->integer('estoque_minimo')->nullable();

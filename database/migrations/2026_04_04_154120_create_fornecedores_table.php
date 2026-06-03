@@ -17,6 +17,7 @@ class CreateFornecedoresTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('nome', 50);
+            $table->string('cnpj', 18)->nullable()->after('nome');
         });
     }
 
